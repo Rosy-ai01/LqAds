@@ -1,399 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Facebook Ads to Looker Studio Connector | LangQuang Digital</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Securely sync Facebook Ads performance data into Looker Studio dashboards with LangQuang Digital."
-    />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangQuang | Digital Marketing Agency Brisbane</title>
+    <meta name="description" content="LangQuang is a digital marketing agency in Brisbane specializing in branding, web development, SEO, and AI solutions.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-      :root {
-        --primary: #1a73e8;
-        --secondary: #0d47a1;
-        --text-dark: #202124;
-        --text-light: #5f6368;
-        --bg-light: #f8f9fa;
-        --white: #ffffff;
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      }
-
-      /* Reset & Base Styles */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        background-color: var(--white);
-        color: var(--text-dark);
-        line-height: 1.6;
-      }
-
-      /* Navigation */
-      nav {
-        background: var(--white);
-        height: 75px;
-        display: flex;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: var(--shadow);
-      }
-
-      .nav-container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .logo {
-        font-weight: 700;
-        font-size: 1.4rem;
-        color: var(--primary);
-        text-decoration: none;
-        cursor: pointer;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 30px;
-        align-items: center;
-      }
-      .nav-links a {
-        text-decoration: none;
-        color: var(--text-light);
-        font-weight: 500;
-        transition: color 0.3s;
-        cursor: pointer;
-      }
-      .nav-links a:hover {
-        color: var(--primary);
-      }
-
-      .btn-cta {
-        background: var(--primary);
-        color: white !important;
-        padding: 10px 24px;
-        border-radius: 6px;
-        font-weight: 600;
-        transition: background 0.3s;
-      }
-
-      /* Page Visibility Logic */
-      .page-section {
-        display: none;
-      }
-      .page-section.active {
-        display: block;
-        animation: fadeIn 0.4s ease;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
+        :root {
+            --primary: #9D00FF;
+            --primary-dark: #7b00cc;
+            --secondary: #1a1b1e;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --bg-light: #f9f9f9;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
-      }
 
-      /* Hero Section */
-      .hero {
-        padding: 120px 20px;
-        background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
-        text-align: center;
-      }
-      .hero h1 {
-        font-size: 3.5rem;
-        color: var(--text-dark);
-        max-width: 900px;
-        margin: 0 auto 20px;
-        line-height: 1.1;
-      }
-      .hero p {
-        font-size: 1.3rem;
-        color: var(--text-light);
-        max-width: 650px;
-        margin: 0 auto 35px;
-      }
+        html { scroll-behavior: smooth; }
 
-      /* Container */
-      .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 80px 20px;
-      }
-      .section-title {
-        text-align: center;
-        margin-bottom: 50px;
-      }
-      .section-title h2 {
-        font-size: 2.2rem;
-        margin-bottom: 15px;
-      }
+        body {
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--white);
+        }
 
-      /* Grid & Cards */
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-      }
-      .card {
-        padding: 40px;
-        background: var(--white);
-        border: 1px solid #eee;
-        border-radius: 16px;
-        transition: transform 0.3s, box-shadow 0.3s;
-      }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow);
-        border-color: var(--primary);
-      }
-      .card h3 {
-        margin-bottom: 15px;
-        color: var(--primary);
-        font-size: 1.4rem;
-      }
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
 
-      /* Contact Form Styles */
-      .contact-wrapper {
-        background: var(--bg-light);
-        padding: 60px;
-        border-radius: 24px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .form-group {
-        margin-bottom: 20px;
-      }
-      .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-      }
-      .form-group input,
-      .form-group textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-      }
-      .form-group textarea {
-        height: 120px;
-        resize: vertical;
-      }
-      .btn-submit {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        width: 100%;
-        font-size: 1rem;
-      }
+        .nav-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-      /* Privacy Policy Content */
-      .privacy-content {
-        max-width: 850px;
-        margin: 60px auto;
-        padding: 0 20px;
-      }
-      .privacy-content h1 {
-        font-size: 2.8rem;
-        margin-bottom: 10px;
-        color: var(--text-dark);
-      }
-      .privacy-content h2 {
-        font-size: 1.8rem;
-        margin: 45px 0 15px;
-        color: var(--primary);
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-      }
-      .privacy-content p {
-        margin-bottom: 20px;
-        color: #444;
-        font-size: 1.05rem;
-      }
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
 
-      /* Footer */
-      footer {
-        background: #1a1b1e;
-        color: #9aa0a6;
-        padding: 80px 20px 40px;
-        margin-top: 80px;
-      }
-      .footer-content {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 40px;
-      }
-      .footer-col h4 {
-        color: white;
-        margin-bottom: 25px;
-        font-size: 1.1rem;
-      }
-      .footer-col ul {
-        list-style: none;
-      }
-      .footer-col a {
-        color: #9aa0a6;
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .footer-col a:hover {
-        color: var(--primary);
-      }
-      .footer-bottom {
-        text-align: center;
-        margin-top: 60px;
-        padding-top: 25px;
-        border-top: 1px solid #333;
-        font-size: 0.9rem;
-      }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
 
-      @media (max-width: 768px) {
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn-cta {
+            background: var(--primary);
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(157, 0, 255, 0.3);
+        }
+
+        /* Section Toggling Logic */
+        .page-view { display: block; }
+        .page-view.hidden { display: none; }
+        
+        #privacy-view { 
+            display: none; 
+            padding: 120px 20px 60px; 
+            max-width: 900px; 
+            margin: 0 auto;
+        }
+        #privacy-view.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 20px 100px;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1f9 100%);
+            text-align: center;
+        }
+
         .hero h1 {
-          font-size: 2.5rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #2d3436, #9D00FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .contact-wrapper {
-          padding: 30px;
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
         }
-      }
+
+        /* Sections General */
+        section { padding: 100px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 15px; }
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* Privacy Typography */
+        .privacy-content h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        .privacy-content h2 { font-size: 1.8rem; margin: 40px 0 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .privacy-content h3 { font-size: 1.3rem; margin: 25px 0 10px; }
+        .privacy-content p { margin-bottom: 15px; color: var(--text-muted); }
+        .privacy-content ul { margin: 0 0 20px 20px; color: var(--text-muted); }
+        .privacy-content li { margin-bottom: 8px; }
+
+        /* Services Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h3 { margin-bottom: 15px; font-size: 1.5rem; }
+        .card p { color: var(--text-muted); }
+
+        /* Process Section */
+        .process-bg { background-color: var(--bg-light); }
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 700;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .faq-question {
+            padding: 20px 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+        .faq-answer {
+            padding: 0 0 20px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        /* Contact Form */
+        .contact-flex {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            background: var(--secondary);
+            color: white;
+            padding: 80px;
+            border-radius: 30px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #888;
+            padding: 80px 20px 40px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-logo { color: white; font-weight: 800; font-size: 1.5rem; margin-bottom: 20px; }
+        .footer-links h4 { color: white; margin-bottom: 20px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #888; text-decoration: none; cursor: pointer; transition: 0.3s; }
+        .footer-links a:hover { color: var(--primary); }
+        
+        @media (max-width: 992px) {
+            .contact-flex { grid-template-columns: 1fr; padding: 40px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
     <nav>
-      <div class="nav-container">
-        <a onclick="showPage('home')" class="logo">
-            <img src="/LqLogo.jpg" width="150" height="50">
-        </a>
-        <div class="nav-links">
-          <a onclick="showPage('home')">Home</a>
-          <a onclick="scrollToSection('features')">Features</a>
-          <a onclick="showPage('privacy')">Privacy Policy</a>
-          <button onclick="scrollToSection('contact')" class="btn-cta">
-            Connect Now
-          </button>
+        <div class="nav-container">
+            <a onclick="showMain()" class="logo">LANGQUANG</a>
+            <div class="nav-links">
+                <a href="javascript:void(0)" onclick="scrollToSection('services')">Services</a>
+                <a href="javascript:void(0)" onclick="scrollToSection('process')">Process</a>
+                <a href="javascript:void(0)" onclick="scrollToSection('faq')">FAQ</a>
+                <a href="javascript:void(0)" onclick="scrollToSection('contact')" class="btn-cta">Get Started</a>
+            </div>
         </div>
-      </div>
     </nav>
 
-    <div id="home-page" class="page-section active">
-      <header class="hero">
-        <h1>Facebook Ads to Looker Studio Connector</h1>
-        <p>
-          The smartest way to automate your marketing reports. Securely sync
-          performance data directly into your Looker Studio dashboards.
-        </p>
-        <a
-          href="#"
-          class="btn-cta"
-          style="padding: 18px 45px; font-size: 1.1rem; border-radius: 50px"
-          >Get Started for Free</a
-        >
-      </header>
+    <div id="main-view" class="page-view">
+        <header class="hero">
+            <div class="container">
+                <h1>Your Journey from Branding to Customer Loyalty</h1>
+                <p>LangQuang is a digital marketing agency in Brisbane helping brands turn ideas into results. We craft online experiences that drive engagement and growth.</p>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <a href="javascript:void(0)" onclick="scrollToSection('services')" class="btn-cta">See Our Services</a>
+                    <a href="javascript:void(0)" onclick="scrollToSection('contact')" class="btn-cta" style="background: transparent; border: 2px solid var(--primary); color: var(--primary) !important;">Get In Touch</a>
+                </div>
+            </div>
+        </header>
 
-      <main>
-        <section id="features" class="container">
-          <div class="section-title">
-            <h2>Powerful Data Integration</h2>
-            <p>
-              Everything you need to visualize your advertising ROI in
-              real-time.
-            </p>
-          </div>
-          <div class="grid">
-            <div class="card">
-              <h3>Secure Sync</h3>
-              <p>
-                Built with enterprise-grade security. We use official Facebook
-                Marketing APIs to fetch data via encrypted connections.
-              </p>
+        <section id="services" class="container">
+            <div class="section-header">
+                <h2>Smart Services That Deliver Real Impact</h2>
+                <p>We blend creativity, strategy, and data to help your business grow online.</p>
             </div>
-            <div class="card">
-              <h3>Complete Metrics</h3>
-              <p>
-                Access Impressions, Clicks, CPC, CTR, Reach, and Spend. Gain
-                deep insights into your campaign performance.
-              </p>
+            <div class="grid">
+                <div class="card">
+                    <span class="icon">🎨</span>
+                    <h3>Creative Branding</h3>
+                    <p>Develop a strong visual identity that reflects your brand's story and values. From logos to complete brand guidelines.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">💻</span>
+                    <h3>Web Development</h3>
+                    <p>Responsive, user-friendly websites built for performance and scalability. We specialize in custom full-stack solutions.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">📈</span>
+                    <h3>SEO Solutions</h3>
+                    <p>Smart SEO strategies that help your brand get found online and attract the right audience through organic search.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🤖</span>
+                    <h3>AI Solutions</h3>
+                    <p>Empower your business with intelligent digital automation, personalization tools, and custom AI integrations.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">📊</span>
+                    <h3>Custom Dashboards</h3>
+                    <p>Connect your data (Facebook Ads, Google Ads) to Looker Studio for real-time reporting and better decision making.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">⚙️</span>
+                    <h3>Automation Tools</h3>
+                    <p>Streamline your workflow with custom booking systems, CRM integrations, and marketing automation.</p>
+                </div>
             </div>
-            <div class="card">
-              <h3>Real-Time Analytics</h3>
-              <p>
-                Your Looker Studio dashboards update automatically. Say goodbye
-                to manual CSV exports and fragmented reporting.
-              </p>
+        </section>
+
+        <section id="process" class="process-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our 4-Step Methodology</h2>
+                    <p>How we take your brand from idea to results.</p>
+                </div>
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>Discovery</h4>
+                        <p>Understanding your brand, audience, and business goals.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>Creative Design</h4>
+                        <p>Developing consistent, conversion-focused visuals.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>Execution</h4>
+                        <p>Turning ideas into seamless, high-performing digital solutions.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>Performance</h4>
+                        <p>Tracking results, refining strategies, and scaling for success.</p>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
+
+        <section id="faq" class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about working with us.</p>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="faq-item">
+                    <div class="faq-question">What services does LangQuang provide? <span>+</span></div>
+                    <div class="faq-answer">We are a full-service agency in Brisbane offering branding, custom web development, SEO, AI solutions, and data reporting dashboards.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do you offer custom web development? <span>+</span></div>
+                    <div class="faq-answer">Yes, we specialize in building custom, performance-driven websites from scratch, tailored to your specific business requirements.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">How do you approach branding? <span>+</span></div>
+                    <div class="faq-answer">Our approach blends creativity with strategy. We start with discovery to understand your values, then create a visual identity that connects with your audience.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do you provide ongoing support? <span>+</span></div>
+                    <div class="faq-answer">Absolutely. We provide ongoing website maintenance, SEO monitoring, and support to ensure your digital assets continue to perform at their best.</div>
+                </div>
+            </div>
         </section>
 
         <section id="contact" class="container">
-          <div class="section-title">
-            <h2>Contact Us</h2>
-            <p>
-              Have questions or need support? Reach out to the LangQuang Digital
-              team.
-            </p>
-          </div>
-          <div class="contact-wrapper">
-            <form
-              onsubmit="event.preventDefault(); alert('Message sent successfully!');"
-            >
-              <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" placeholder="John Doe" required />
-              </div>
-              <div class="form-group">
-                <label>Work Email</label>
-                <input type="email" placeholder="john@company.com" required />
-              </div>
-              <div class="form-group">
-                <label>Message</label>
-                <textarea
-                  placeholder="How can we help you today?"
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" class="btn-submit">Send Message</button>
-            </form>
-            <p
-              style="
-                text-align: center;
-                margin-top: 20px;
-                font-size: 0.9rem;
-                color: var(--text-light);
-              "
-            >
-              Or email us directly at: <strong>support@langquang.com</strong>
-            </p>
-          </div>
+            <div class="contact-flex">
+                <div>
+                    <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to grow?</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 40px; color: #ccc;">Let's discuss how we can elevate your brand. Our team is ready to turn your ideas into a digital reality.</p>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Email:</strong> digital@langquang.com<br>
+                        <strong>Phone:</strong> (+61) 415 505 292<br>
+                        <strong>Location:</strong> Camp Hill, Brisbane, QLD
+                    </div>
+                </div>
+                <form class="contact-form" onsubmit="event.preventDefault(); alert('Thanks for reaching out!');">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <select style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; border:none;">
+                        <option value="" disabled selected>Interested in...</option>
+                        <option>Web Development</option>
+                        <option>Branding</option>
+                        <option>SEO</option>
+                        <option>AI Solutions</option>
+                    </select>
+                    <textarea placeholder="Tell us about your project" rows="5" required></textarea>
+                    <button type="submit" class="btn-cta" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
         </section>
-      </main>
     </div>
 
-    <div id="privacy-page" class="page-section">
+    <div id="privacy-view">
+        <button onclick="showMain()" class="btn-cta" style="margin-bottom: 30px;">← Back to Home</button>
       <main class="privacy-content">
       <h1>Privacy Policy</h1>
       <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
@@ -523,61 +560,84 @@
         <li>By email: <strong>langquang@gmail.com</strong></li>
       </ul>
     </main>
-  </div>
-      </main>
     </div>
 
     <footer>
-      <div class="footer-content">
-        <div class="footer-col">
-          <img src="LqLogo.jpg" width="400" height="200">
-          <p>Seamless data integration for<br />modern marketing teams.</p>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">LANGQUANG</div>
+                <p>Brisbane's leading digital partner for branding, development, and strategic growth.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Services</h4>
+                <ul>
+                    <li><a onclick="scrollToSection('services')">Branding</a></li>
+                    <li><a onclick="scrollToSection('services')">Web Design</a></li>
+                    <li><a onclick="scrollToSection('services')">SEO</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a onclick="scrollToSection('process')">Our Process</a></li>
+                    <li><a onclick="scrollToSection('faq')">FAQs</a></li>
+                    <li><a onclick="scrollToSection('contact')">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a onclick="showPrivacy()">Privacy Policy</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a onclick="showPage('home')">Features</a></li>
-            <li><a onclick="scrollToSection('contact')">Contact Support</a></li>
-          </ul>
+        <div style="text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid #222; font-size: 0.8rem;">
+            © 2026 LangQuang Digital. All rights reserved.
         </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a onclick="showPage('privacy')">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li>support@langquang.com</li>
-            <li>
-              <a href="https://langquang.com" target="_blank">LangQuang.com</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2026 LangQuang Digital. All rights reserved.</p>
-      </div>
     </footer>
 
     <script>
-      function showPage(pageId) {
-        document
-          .querySelectorAll(".page-section")
-          .forEach((section) => section.classList.remove("active"));
-        document.getElementById(pageId + "-page").classList.add("active");
-        window.scrollTo(0, 0);
-      }
+        // Page Toggling Logic
+        function showPrivacy() {
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('privacy-view').classList.add('active');
+            window.scrollTo(0, 0);
+        }
 
-      function scrollToSection(id) {
-        showPage("home");
-        setTimeout(() => {
-          const el = document.getElementById(id);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }, 100);
-      }
+        function showMain() {
+            document.getElementById('main-view').classList.remove('hidden');
+            document.getElementById('privacy-view').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        function scrollToSection(id) {
+            showMain(); // Ensure we are on the main landing page first
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const offset = 80; // height of nav
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = el.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 10);
+        }
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isOpen = answer.style.display === 'block';
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+                answer.style.display = isOpen ? 'none' : 'block';
+            });
+        });
     </script>
-  </body>
+</body>
 </html>
